@@ -11,8 +11,7 @@ Board::Board(int width = 200, int height = 300, int Squaresx = 17, int Squaresy 
 	Fl_Window(width, height)
 {
 	srand(time(NULL));//Sets random to be even more random!
-
-	this->color(FL_BLACK); //board
+	color(FL_BLACK); //board
 
 	for (int y = 0; y < Squaresy; y++)
 	{
@@ -34,7 +33,7 @@ Board::Board(int width = 200, int height = 300, int Squaresx = 17, int Squaresy 
 	//*********************************
 
 
-	/*string file2 = "images/emptyUncoveredTile.jpg";
+	/*string file2 = "images/mine.jpg";
 	Fl_JPEG_Image img(file2.c_str());
 	if (img.w() == 0 || img.h() == 0 || img.d() == 0)
 	{
@@ -46,13 +45,26 @@ Board::Board(int width = 200, int height = 300, int Squaresx = 17, int Squaresy 
 		cout << "good image" << endl;
 	}
 
-	for (int y = 1; y < 18; y++)
+
+	for (int y = 0; y < Squaresy; y++)
 	{
-		for (int x = 0; x < 12; x++)
+		for (int x = 0; x < Squaresx; x++)
 		{
-			cell = new Cell(5 + (16 * x), (16 * y), 16, 16, "");
+			if ((rand() % 5) == 1)
+			{
+			cell = new Cell((16 * x), (16 * y), 16, 16, "M");
+				this->image(img);
+
+			}
+			else
+			{
+			cell = new Cell((16 * x), (16 * y), 16, 16, "");
+			}
 		}
-	}*/
+	}
+*/
+
+
 
 	/*
 	box->labelfont(FL_BOLD);
