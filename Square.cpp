@@ -28,15 +28,21 @@ int Square::handle(int event)
 	switch (event)
 	{
 
-
 	case FL_RELEASE:
 		switch (Fl::event_button())
 		{
 		case FL_LEFT_MOUSE:
-			this->color(FL_GRAY_RAMP);
-			clickCount++;
-			cout << "Button" << this->label() << ": " << clickCount << endl;
-			redraw();
+			if (this->label() == "M")
+			{
+				cout << "clicked mine" << endl;
+			}
+			else
+			{
+				this->color(FL_GRAY_RAMP);
+				clickCount++;
+				cout << "Button" << this->label() << ": " << clickCount << endl;
+				redraw();
+			}
 			do_callback(); //Not doing the callback!
 			return 1;
 		case FL_RIGHT_MOUSE:

@@ -15,7 +15,7 @@ int main(int argc, char **argv)
 	cin >> tall;
 	cout << endl;
 
-	Board* gameBoard = new Board(200, 300, wide, tall);
+	Board* gameBoard = new Board((16*wide), (16)*tall, wide, tall);
 	gameBoard->show(argc, argv);
 	return Fl::run();
 
