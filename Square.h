@@ -14,7 +14,8 @@ class Square : public Fl_Button
 public:
 
 	Square(int x, int y, int width, int height, char *L);
-
 	int handle(int event);
+	void buttonCallback(Fl_Widget *w, void *data);
+
 
 };

@@ -6,6 +6,7 @@
 
 using namespace std;
 
+//Button
 Square::Square(int x, int y, int width, int height, char *L = 0) :
 	Fl_Button(x, y, width, height, L), clickCount(0)
 {
@@ -13,7 +14,7 @@ Square::Square(int x, int y, int width, int height, char *L = 0) :
 }
 
 
-void Board::buttonCallback(Fl_Widget *w, void *data)
+void Square::buttonCallback(Fl_Widget *w, void *data)
 {
 	cout << "Callback called" << endl;
 	/*square* c = static_cast<square*>(data);
@@ -34,14 +35,14 @@ int Square::handle(int event)
 		case FL_LEFT_MOUSE:
 			this->color(FL_GRAY_RAMP);
 			clickCount++;
-			cout << "Button " << this->label() << ": " << clickCount << endl;
+			cout << "Button" << this->label() << ": " << clickCount << endl;
 			redraw();
-			//do_callback();
+			do_callback(); //Not doing the callback!
 			return 1;
 		case FL_RIGHT_MOUSE:
 			this->color(FL_RED);
+			do_callback();
 			redraw();
-			//do_callback();
 			return 1;
 		}
 	default:

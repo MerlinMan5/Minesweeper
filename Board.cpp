@@ -3,18 +3,38 @@
 #include <FL/Fl_JPEG_Image.h>
 #include <iostream>
 #include <vector>
+#include <time.h>
 
 using namespace std;
 
-Board::Board(int width = 400, int height = 200) :
+Board::Board(int width = 200, int height = 300, int Squaresx = 17, int Squaresy = 12) :
 	Fl_Window(width, height)
 {
+	srand(time(NULL));//Sets random to be even more random!
+
 	this->color(FL_BLACK); //board
-	for (int y = 1; y < 18; y++)
+
+
+	//for (int y = 1; y < 18; y++)
+	//{
+	//	for (int x = 0; x < 12; x++)
+	//	{
+	//		square = new Square(5 + (16 * x), (16 * y), 16, 16, "");
+	//	}
+	//}
+
+	for (int y = 1; y < Squaresy; y++)
 	{
-		for (int x = 0; x < 12; x++)
+		for (int x = 0; x < Squaresx; x++)
 		{
-			square = new Square(5 + (16 * x), (16 * y), 16, 16, "");
+			if ((rand() % 4) == 1)
+			{
+				square = new Square(5 + (16 * x), (16 * y), 16, 16, "M");
+			}
+			else
+			{
+				square = new Square(5 + (16 * x), (16 * y), 16, 16, "");
+			}
 
 		}
 	}

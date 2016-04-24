@@ -15,6 +15,6 @@ class Board : public Fl_Window
 
 public:
 	
-	Board(int, int);
+	Board(int width, int height, int x, int y);
 	void buttonCallback(Fl_Widget * w, void * data);
 };

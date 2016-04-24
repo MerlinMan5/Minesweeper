@@ -7,15 +7,15 @@ using namespace std;
 
 int main(int argc, char **argv)
 {
-	/*int wide = 0;
+	int wide = 0;
 	int tall = 0;
 
 	cout << "How many squares wide and how many tall? (x,y): " << endl;
 	cin >> wide;
 	cin >> tall;
-	cout << endl;*/
+	cout << endl;
 
-	Board* gameBoard = new Board(200, 300);
+	Board* gameBoard = new Board(200, 300, wide, tall);
 	gameBoard->show(argc, argv);
 	return Fl::run();
 
