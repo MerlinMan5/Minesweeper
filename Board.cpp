@@ -14,19 +14,11 @@ Board::Board(int width = 200, int height = 300, int Squaresx = 17, int Squaresy 
 
 	this->color(FL_BLACK); //board
 
-	//for (int y = 1; y < 18; y++)
-	//{
-	//	for (int x = 0; x < 12; x++)
-	//	{
-	//		square = new Square(5 + (16 * x), (16 * y), 16, 16, "");
-	//	}
-	//}
-
 	for (int y = 0; y < Squaresy; y++)
 	{
 		for (int x = 0; x < Squaresx; x++)
 		{
-			if ((rand() % 4) == 1)
+			if ((rand() % 5) == 1)
 			{
 				square = new Square((16 * x), (16 * y), 16, 16, "M");
 			}
@@ -36,6 +28,7 @@ Board::Board(int width = 200, int height = 300, int Squaresx = 17, int Squaresy 
 			}
 		}
 	}
+
 
 
 	//*********************************

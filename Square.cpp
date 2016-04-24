@@ -14,13 +14,13 @@ Square::Square(int x, int y, int width, int height, char *L = 0) :
 }
 
 
-void Square::buttonCallback(Fl_Widget *w, void *data)
-{
-	cout << "Callback called" << endl;
-	/*square* c = static_cast<square*>(data);
-	this->image(img);
-	c->redraw();*/
-}
+//void Square::buttonCallback(Fl_Widget *w, void *data)
+//{
+//	cout << "Callback called" << endl;
+//	/*square* c = static_cast<square*>(data);
+//	this->image(img);
+//	c->redraw();*/
+//}
 
 
 int Square::handle(int event)
@@ -34,7 +34,13 @@ int Square::handle(int event)
 		case FL_LEFT_MOUSE:
 			if (this->label() == "M")
 			{
-				cout << "clicked mine" << endl;
+				//label() = "M";
+				cout << "YOU LOSE!!" << endl;
+				//Fl_Window *window = new Fl_Window(200, 300);
+				//Fl_Box *box = new Fl_Box(300, 300, 200, 200, "YOU LOSE!!");
+				//redraw();
+				Sleep(500);
+				exit(0);
 			}
 			else
 			{
