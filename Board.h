@@ -11,13 +11,10 @@
 class Board : public Fl_Window
 {
 	Square* square;
-	Square* square2;
 	Cell* cell;
-	int handle_key(int event, int key, int e);
 
 public:
 	
-	Board(int width, int height, int x, int y);
-	int handle(int event);
+	Board(int width, int height, int x, int y, bool debug);
 	void buttonCallback(Fl_Widget * w, void * data);
 };

@@ -2,6 +2,8 @@
 #include <FL/Fl_Box.H>
 #include <FL/Fl_JPEG_Image.h>
 #include <iostream>
+#include <time.h>
+#include <string>
 
 using namespace std;
 
@@ -9,50 +11,61 @@ int main(int argc, char **argv)
 {
 	int wide = 0;
 	int tall = 0;
+	bool debug = false;
+	string input = "";
 
 	cout << "How many squares wide and how many tall? (x,y): " << endl;
 	cin >> wide;
 	cin >> tall;
-	cout << endl;
+	cout << "Debug:" << endl;
+	cin >> input;
+	if (input == "yes")
+	{
+		debug = true;
+	}
+	else
+	{
+		debug = false;
+	}
 
-	Board* gameBoard = new Board((16*wide), (16)*tall, wide, tall);
+
+		Board* gameBoard = new Board((16*wide), (16)*tall, wide, tall, debug);
 	gameBoard->show(argc, argv);
 	return Fl::run();
 
 
-	//^Button with click response (No Images)
+	//^Above button with click response (No Images)
 //********************************************************
-	//Boxes with Images (No click response)
+	//Below is boxes with Images (No click response)
 
 
-	//string file2 = "images/CoveredTile.jpg";
-	//Fl_JPEG_Image img(file2.c_str());
+	//string file1 = "images/CoveredTile.jpg";
+	//string file2 = "images/mine.jpg";
+	//Fl_JPEG_Image img1(file1.c_str());
+	//Fl_JPEG_Image img2(file2.c_str());
 
-	//if (img.w() == 0 || img.h() == 0 || img.d() == 0)
+	//Fl_Window *window = new Fl_Window((17*wide), 16*tall);
+
+	//srand(time(NULL));//Sets random to be even more random!
+
+	//for (int y = 0; y < tall; y++)
 	//{
-	//	cerr << "Error loading image." << endl;
-	//	system("pause");
-	//	return 1;
-	//}
-
-	//Fl_Window *window = new Fl_Window(200, 300);
-
-	//for (int y = 1; y < 18; y++)
-	//{
-	//	for (int x = 0; x < 12; x++)
+	//	for (int x = 0; x < wide; x++)
 	//	{
-	//		Cell* cell = new Cell(5 + (16 * x), (16 * y) - 7, 16, 16, "");
-	//		cell->image(img);
-
-	//		//Fl_Box *box = new Fl_Box(5 + (16 * x), (16 * y), 16, 16, "");
-	//		/*Fl_Box *box2 = new Fl_Box(5 + (16 * x), (16 * y)-7, 16, 16, "2");
-	//		box2->labelcolor(FL_BOLD);
-	//		box2->labelcolor(FL_BLUE);
-	//		box2->labelsize(12);*/
+	//		if ((rand() % 5) == 1)
+	//		{
+	//			Cell* cell = new Cell(5 + (16 * x), (16 * y) - 7, 16, 16, "");
+	//			cell->image(img2);
+	//		}
+	//		else
+	//		{
+	//			Cell* cell = new Cell(5 + (16 * x), (16 * y) - 7, 16, 16, "");
+	//			cell->image(img1);
+	//		}
 	//	}
 	//}
+	//
 
-	//window->end();
 	//window->show(argc, argv);
 	//return Fl::run();
 
