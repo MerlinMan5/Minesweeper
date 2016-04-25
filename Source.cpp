@@ -6,7 +6,9 @@
 #include <string>
 
 using namespace std;
-
+void hi() {
+	cout << "this is ray";
+}
 int main(int argc, char **argv)
 {
 	int wide = 0;
