@@ -15,6 +15,8 @@ class Board : public Fl_Window
 
 public:
 	
+	void minePressed(Fl_Widget * widget);
+
 	Board(int width, int height, int x, int y, bool debug);
-	void buttonCallback(Fl_Widget * w, void * data);
+	void minePressed(Fl_Widget * w);
 };

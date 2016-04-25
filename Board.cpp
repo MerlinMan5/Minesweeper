@@ -6,6 +6,24 @@
 #include <time.h>
 
 using namespace std;
+void buttonCallback(Fl_Widget* widget, void* boardPtr) {
+	cout << "callback called" << endl;
+	Board* board = static_cast<Board*>(boardPtr);
+	board->minePressed(widget);
+}
+
+void Board::minePressed(Fl_Widget* widget) {
+	Square* square = static_cast<Square*>(widget);
+	if (square->label() == "M") {
+		Fl_JPEG_Image *pic = new Fl_JPEG_Image();
+		square->image(pic);
+	}
+	else {
+		//FIXME change to number// 
+	}
+	Fl_Widget::redraw();
+
+}
 
 Board::Board(int width = 200, int height = 300, int Squaresx = 17, int Squaresy = 12, bool debug = false) :
 	Fl_Window(width, height)

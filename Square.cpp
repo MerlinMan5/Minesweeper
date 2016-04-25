@@ -36,6 +36,7 @@ int Square::handle(int event)
 			if (this->label() == "M")
 			{
 				//label() = "M";
+				this->do_callback();
 				cout << "YOU LOSE!!" << endl;
 				//Fl_Window *window = new Fl_Window(200, 300);
 				//Fl_Box *box = new Fl_Box(300, 300, 200, 200, "YOU LOSE!!");
