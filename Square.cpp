@@ -7,10 +7,11 @@
 
 using namespace std;
 
-Square::Square(unsigned int x, unsigned int y, unsigned int width, unsigned int height, char* L, string imageFilename, string tag) :
-	Fl_Button(x, y, width, height, L), clickCount(0), imagelabel(nullptr), tag(tag), flag(false) {
+Square::Square(unsigned int x, unsigned int y, unsigned int width, unsigned int height, char* L, string imageFilename, string tag, bool flag) :
+	Fl_Button(x, y, width, height, L), clickCount(0), imagelabel(nullptr), tag(tag), fcheck(fcheck), flag(flag) {
 
 	setImage(imageFilename);
+	align(-1);
 }
 void Square::setLabel(char* l) {
 	label = l;
@@ -19,8 +20,19 @@ char* Square::getLabel() const {
 	return label;
 }
 
+void Square::setFcheck(bool x) {
+	fcheck = x;
+}
+
+bool Square::getFcheck() {
+	return fcheck;
+}
+
 bool Square::getFlag() {
 	return flag;
+}
+void Square::setFlag(bool x) {
+	flag = x;
 }
 
 string Square::getTag() const {
@@ -30,9 +42,8 @@ string Square::getTag() const {
 void Square::setImage(string filename) {
 	delete imagelabel;
 	imagelabel = new Fl_JPEG_Image(filename.c_str());
-	imagelabel->copy(16, 16);
-	this->image(imagelabel);
-	this->align(FL_ALIGN_CENTER);
+	image(imagelabel);	
+	
 }
 
 int Square::handle(int event)
@@ -42,12 +53,12 @@ int Square::handle(int event)
 		switch (Fl::event_button())
 		{
 		case FL_LEFT_MOUSE:
+			this->setFcheck(false);
 			clickCount++;
-			this->flag = false;
 			this->do_callback();
 			return 1;
 		case FL_RIGHT_MOUSE:
-			this->flag = true;
+			this->setFcheck(true);
 			this->do_callback();
 			return 1;
 		}

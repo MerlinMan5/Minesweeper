@@ -16,12 +16,16 @@ class Square : public Fl_Button
 	Fl_JPEG_Image* imagelabel;
 	std::string tag;
 	bool flag;
+	bool fcheck;
 public:
 
 	Square(unsigned int x, unsigned int y, unsigned int width, unsigned int height, char* L,
-		std::string imageFilename, std::string tag);
+		std::string imageFilename, std::string tag, bool flag);
 
+	bool getFcheck();
+	void setFcheck(bool x);
 	bool getFlag();
+	void setFlag(bool x);
 	void setLabel(char* l);
 	char* getLabel() const;
 	std::string getTag() const;

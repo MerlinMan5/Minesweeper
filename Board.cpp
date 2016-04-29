@@ -16,54 +16,61 @@ void buttonCallback(Fl_Widget* widget, void* boardPtr) {
 	Board* board = static_cast<Board*>(boardPtr);
 	board->squarePressed(widget);
 }
-bool Board::squarePressed(Board* board, void* ptr) {
+
+void Board::modeChanger(Fl_Widget* widget, Board* board) {
 	cout << "mode changer" << endl;
 	bool mode = board->getDebug();
-	Square* square = static_cast<Square*>(ptr);
+	Square* square = static_cast<Square*>(widget);
+	unsigned int wide = board->wide;
+	unsigned int tall = board->tall;
+	unsigned int x = 0;
+	unsigned int y = 0;
+	bool status = board->getDebug();
 
-	if (square->getTag() == "M")
-	{
-		if (mode == false)
-		{
-			cout << "howdy" << endl;
-			square->setLabel(" ");
-			mode = true;
-			mine->redraw();
-		}
-		else if (mode == true)
-		{
-			cout << "howdy2" << endl;
-			square->setLabel("M");
-			mode = false;
-			square->redraw();
+	for (x = 0; x <= wide; x++) {
+		for (y = 0; y <= tall; y++) {
+			square = board->gameboard.at(x).at(y);
+			if (square->getTag() == "M") {
+				if (status) {
+					square->setLabel("M");
+					square->redraw();
+					board->setDebug(false);
+				}
+				else if (!status){
+					square->setLabel(" ");
+					square->redraw();
+					board->setDebug(true);
+				}
+			}
 		}
 	}
-	board->setDebug(mode);
-	cout << "debug: " << board->getDebug() << endl;
-	return board->getDebug();
 }
 
 void Board::squarePressed(Fl_Widget* widget) {
 
 	Square* square = static_cast<Square*>(widget);
-	bool flag = square->getFlag();
+	bool fcheck = square->getFcheck();
 
-	if (flag == true) {
-		if (square->color() == FL_RED){
-			square->color(FL_GRAY);
+	if (fcheck == true) {
+		if (square->getFlag()) {
+			square->setImage("squareimages/coveredTile.jpg");
 			square->redraw();
+			square->setFlag(false);
 		}
-		else if (square->color() == FL_GRAY) {
-			square->color(FL_RED);
+		else if (!(square->getFlag())) {
+			square->setImage("squareimages/flaggedMine.jpg");
 			square->redraw();
+			square->setFlag(true);
 		}
+		
 	}
-	else if (flag == false)
+	else if (fcheck == false)
 	{
 		if (square->getTag() == "M") {
 			square->setImage("squareimages/mine.jpg");
 			square->redraw();
 			cout << "YOU LOSE" << endl;
+			//FIXME new game 
 		}
 		else if (square->getTag() == "N") {
 			cout << "non-mine" << endl;
@@ -74,65 +81,35 @@ void Board::squarePressed(Fl_Widget* widget) {
 	}
 }
 
-Board::Board(int width, int height, int Squaresx, int Squaresy, vector<string> imageNames) : debug(debug),
+Board::Board(int width, int height, int Squaresx, int Squaresy,bool debugger, vector<string> imageNames) : debug(debugger), wide(Squaresx), tall (Squaresy),
 	Fl_Window(width, height)
 {
 	srand(time(NULL)); //Sets random to be even more random!
 	color(FL_BLACK); //board
-	vector < vector<Square*> > swag;
+	//vector < vector<Square*> > gameboard;
 	vector <Square *> rowVec;
 	unsigned int x;
 	unsigned int y;
 	void* view = static_cast<void*>(this);
-	bool debug = getDebug();
-
-	if (debug)
+	for (y = 0; y < Squaresy; y++)
 	{
-		for (y = 0; y < Squaresy; y++)
+		for (x = 0; x < Squaresx; x++)
 		{
-			for (x = 0; x < Squaresx; x++)
+			if ((rand() % 5) == 1)
 			{
-				if ((rand() % 5) == 1)
-				{
-					mine = new Square((16 * x), (16 * y), 16, 16, " ", imageNames.at(0), "M");
-					mine->callback(buttonCallback, view);
-					rowVec.push_back(mine);
-				}
-				else
-				{
-					normal = new Square((16 * x), (16 * y), 16, 16, " ", imageNames.at(0), "N");
-					normal->callback(buttonCallback, view);
-					rowVec.push_back(normal);
-				}
+				mine = new Square((16 * x), (16 * y), 16, 16, " ", imageNames.at(0), "M", false);
+				mine->callback(buttonCallback, view);
+				rowVec.push_back(mine);
 			}
-			swag.push_back(rowVec);
-			rowVec.clear();
-		}
-
-	}
-	else
-	{
-		for (int y = 0; y < Squaresy; y++)
-		{
-			for (unsigned int x = 0; x < Squaresx; x++)
+			else
 			{
-				if ((rand() % 5) == 1)
-				{
-					mine = new Square((16 * x), (16 * y), 16, 16, " ", imageNames.at(0), "M");
-					mine->callback(buttonCallback, view);
-					rowVec.push_back(mine);
-
-				}
-				else
-				{
-					normal = new Square((16 * x), (16 * y), 16, 16, " ", imageNames.at(0), "N");
-					normal->callback(buttonCallback, view);
-					rowVec.push_back(normal);
-				}
+				normal = new Square((16 * x), (16 * y), 16, 16, " ", imageNames.at(0), "N", false);
+				normal->callback(buttonCallback, view);
+				rowVec.push_back(normal);
 			}
-			swag.push_back(rowVec);
-			rowVec.clear();
 		}
+		gameboard.push_back(rowVec);
+		rowVec.clear();
 	}
 }
 void Board::setDebug(bool x) {
@@ -163,7 +140,7 @@ int Board::handle(int e)
 	switch (e) {
 	case FL_KEYBOARD:
 		this->handle_key(e, Fl::event_key(), Fl::get_key(FL_Shift_L));
-		cout << "FL_KEYBOARD" << endl;
+		return 1;
 	case FL_FOCUS:
 		label("Gained focus");
 		return 1;
@@ -175,3 +152,46 @@ int Board::handle(int e)
 		return Fl_Window::handle(e);
 	};
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*}
+else
+{
+for (int y = 0; y < Squaresy; y++)
+{
+for (unsigned int x = 0; x < Squaresx; x++)
+{
+if ((rand() % 5) == 1)
+{
+mine = new Square((16 * x), (16 * y), 16, 16, " ", imageNames.at(0), "M", false);
+mine->callback(buttonCallback, view);
+rowVec.push_back(mine);
+
+}
+else
+{
+normal = new Square((16 * x), (16 * y), 16, 16, " ", imageNames.at(0), "N", false);
+normal->callback(buttonCallback, view);
+rowVec.push_back(normal);
+}
+}
+gameboard.push_back(rowVec);
+rowVec.clear();
+}
+}*/

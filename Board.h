@@ -15,16 +15,19 @@ class Board : public Fl_Window
 	Square* mine;
 	Square* normal;
 	bool debug;
+	std::vector<std::vector<Square*>> gameboard;
+	int wide;
+	int tall;
 
 public:
 
 	void squarePressed(Fl_Widget * widget);
-	bool squarePressed(Board* board, void* ptr);
+	void modeChanger(Fl_Widget* widget, Board* board);
 
 	Board(int width,
 		int height,
 		int x,
-		int y,
+		int y,bool debugger,
 		std::vector<std::string> imageNames);
 
 	int handle_key(int e, int key, bool shift);
