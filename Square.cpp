@@ -1,66 +1,84 @@
 #include "Square.h"
 #include "Board.h"
 #include <iostream>
-#include <FL/Fl_Box.H>
-#include <FL/Fl_JPEG_Image.h>
-
-
+#include <vector>
 using namespace std;
+bool flagOn = false;
 
-Square::Square(unsigned int x, unsigned int y, unsigned int width, unsigned int height, char* L, string imageFilename, string tag, bool flag) :
-	Fl_Button(x, y, width, height, L), clickCount(0), imagelabel(nullptr), tag(tag), fcheck(fcheck), flag(flag) {
-
-	setImage(imageFilename);
+Square::Square(unsigned int x, unsigned int y, unsigned int width, unsigned int height, const char * L, string imageFilename, string tag, string rightClick) :
+	Fl_Button(x, y, width, height, L), label(L), imageLabel(nullptr), tag(tag), rightClick(rightClick)
+{
 	align(-1);
+	setImage(imageFilename);
 }
-void Square::setLabel(char* l) {
-	label = l;
-}
-char* Square::getLabel() const {
+
+string Square::getLabel() const
+{
 	return label;
 }
 
-void Square::setFcheck(bool x) {
-	fcheck = x;
+string Square::getRightClick() const
+{
+	return rightClick;
 }
 
-bool Square::getFcheck() {
-	return fcheck;
+void Square::setRightClick(char* l)
+{
+	rightClick = l;
 }
 
-bool Square::getFlag() {
-	return flag;
-}
-void Square::setFlag(bool x) {
-	flag = x;
-}
-
-string Square::getTag() const {
+string Square::getTag() const
+{
 	return tag;
 }
 
-void Square::setImage(string filename) {
-	delete imagelabel;
-	imagelabel = new Fl_JPEG_Image(filename.c_str());
-	image(imagelabel);	
-	
+void Square::setImage(string filename)
+{
+	delete imageLabel;
+	imageLabel = new Fl_JPEG_Image(filename.c_str());
+	imageLabel->copy(16, 16);
+	image(imageLabel);
+	this->resize(this->x(), this->y(), 16, 16);
 }
 
 int Square::handle(int event)
 {
-	switch (event) {
+	switch (event)
+	{
 	case FL_RELEASE:
 		switch (Fl::event_button())
 		{
 		case FL_LEFT_MOUSE:
-			this->setFcheck(false);
-			clickCount++;
 			this->do_callback();
-			return 1;
+			return 0;
 		case FL_RIGHT_MOUSE:
-			this->setFcheck(true);
-			this->do_callback();
-			return 1;
+			rightClickIterator++;
+
+			if ((rightClickIterator % 3) == 0)
+			{
+				cout << "reseting" << endl;
+				rightClickIterator = 0;
+			}
+			if (rightClickIterator == 1)
+			{
+				this->setImage("images/flaggedMine.jpg");
+				this->setRightClick("F");
+				redraw();
+			}
+			else if (rightClickIterator == 2)
+			{
+				this->setImage("images/question.jpg");
+				this->setRightClick("?");
+				redraw();
+			}
+			else
+			{
+				this->setImage("images/coveredTile.jpg");
+				this->setRightClick(" ");
+				do_callback();
+				redraw();
+			}
+			return 0;
 		}
 	default:
 		return Fl_Widget::handle(event);
