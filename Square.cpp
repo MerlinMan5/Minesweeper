@@ -1,3 +1,4 @@
+#include <Windows.H>
 #include "Square.h"
 #include "Board.h"
 #include <iostream>
@@ -5,8 +6,8 @@
 using namespace std;
 bool flagOn = false;
 
-Square::Square(unsigned int x, unsigned int y, unsigned int width, unsigned int height, const char * L, string imageFilename, string tag, string rightClick) :
-	Fl_Button(x, y, width, height, L), label(L), imageLabel(nullptr), tag(tag), rightClick(rightClick)
+Square::Square(unsigned int x, unsigned int y, unsigned int width, unsigned int height, const char * L, string imageFilename, string tag, string rightClick, bool isCovered, Board* b) :
+	Fl_Button(x, y, width, height, L), label(L), imageLabel(nullptr), tag(tag), rightClick(rightClick), isCovered(isCovered), boardpointer(b)
 {
 	align(-1);
 	setImage(imageFilename);
@@ -27,8 +28,19 @@ void Square::setRightClick(char* l)
 	rightClick = l;
 }
 
+void Square::setIsCovered(bool trip)
+{
+	isCovered = trip;
+}
+
+bool Square::getIsCovered()
+{
+	return isCovered;
+}
+
 string Square::getTag() const
 {
+	//boardpointer->countMines(boardpointer->gameboard, 5,5);
 	return tag;
 }
 
@@ -49,6 +61,10 @@ int Square::handle(int event)
 		switch (Fl::event_button())
 		{
 		case FL_LEFT_MOUSE:
+				//cout << square->getIsCovered() << endl;
+	//square->setIsCovered(false);
+	//cout << square->getIsCovered() << endl;
+		//	uncoverTile();
 			this->do_callback();
 			return 0;
 		case FL_RIGHT_MOUSE:
@@ -56,13 +72,13 @@ int Square::handle(int event)
 
 			if ((rightClickIterator % 3) == 0)
 			{
-				cout << "reseting" << endl;
 				rightClickIterator = 0;
-			}
+			} 
 			if (rightClickIterator == 1)
 			{
 				this->setImage("images/flaggedMine.jpg");
 				this->setRightClick("F");
+				boardpointer->checkWin(boardpointer->gameboard);
 				redraw();
 			}
 			else if (rightClickIterator == 2)
@@ -75,12 +91,12 @@ int Square::handle(int event)
 			{
 				this->setImage("images/coveredTile.jpg");
 				this->setRightClick(" ");
-				do_callback();
 				redraw();
 			}
+
 			return 0;
 		}
 	default:
-		return Fl_Widget::handle(event);
+		return 0;
 	}
 }

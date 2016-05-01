@@ -1,3 +1,4 @@
+#include <Windows.H>
 #include "Board.h"
 #include <iostream>
 #include <vector>
@@ -6,10 +7,7 @@
 
 using namespace std;
 
-int checkSurrounding(vector < vector<Square*> > &board, int x, int  y);
-void countMines(vector < vector<Square*> > &board, int y, int  x);
-
-int totalMines(vector<vector<Square*>>& gameboard)
+int Board::totalMines(vector<vector<Square*>>& gameboard)
 {
 	int totalMines = 0;
 	for (int i = 0; i < gameboard.size(); i++)
@@ -25,46 +23,74 @@ int totalMines(vector<vector<Square*>>& gameboard)
 	return totalMines;
 }
 
-void checkWin(vector<vector<Square*>>& gameboard)
+void Board::checkWin(vector<vector<Square*>>& gameboard)
 {
 	int totalmines = totalMines(gameboard);
-	cout << "totalMinesIn:" << totalmines << endl;
 	int minesFlagged = 0;
+
 	//check for win:  All mines flagged
 	for (int i = 0; i < gameboard.size(); i++)
 	{
 		for (int k = 0; k < gameboard.at(i).size(); k++)
 		{
-			if ((gameboard.at(i).at(k)->getTag() == "M") && (gameboard.at(i).at(k)->getRightClick() == "F" ))
+			if ((gameboard.at(i).at(k)->getTag() == "M") && (gameboard.at(i).at(k)->getRightClick() == "F"))
 			{
 				minesFlagged++;
 			}
 		}
 	}
-	cout << "total mines: " << totalmines << " flagged: " << minesFlagged << endl;
+
 	if (totalmines == minesFlagged)
 	{
-		cout << "you win!" << endl;
+
+		for (int i = 0; i < gameboard.size(); i++)
+		{
+			for (int k = 0; k < gameboard.at(i).size(); k++)
+			{
+				if (gameboard.at(i).at(k)->getTag() == "M")
+				{
+					gameboard.at(i).at(k)->setImage("images/mine.jpg");
+				}
+				if (gameboard.at(i).at(k)->getTag() == "N")
+				{
+					gameboard.at(i).at(k)->setImage("images/smiley.jpg");
+				}
+				redraw();
+			}
+		}
+
+
+		gameover = true;
+		Fl_Window *window = new Fl_Window(260, 100);
+		Fl_Box *box = new Fl_Box(0, -25, 260, 100, "YOU WIN!");
+		box->box(FL_UP_BOX);
+		box->labelsize(36);
+		box->labelfont(FL_BOLD + FL_ITALIC);
+		box->labeltype(FL_SHADOW_LABEL);
+		Fl_Box *box2 = new Fl_Box(15, 17, 230, 100, "New Game? \n (1) Close this window \n (2) Check out our menu bar!");
+		box2->labelsize(12);
+		window->end();
+		window->show();
 	}
+
 }
 
 void buttonCallback(Fl_Widget* widget, void* boardPtr)
 {
-	//cout << "callback called!" << endl;
 	Board* board = static_cast<Board*>(boardPtr);
 	board->squarePressed(widget);
-	//checkWin(gameboard)
 }
 
 Board::Board(int width, int height, int Squaresx, int Squaresy, bool debug, vector<string> imageNames) :
-	Fl_Window(width, height + 32, "Minesweeper!")
+	Fl_Window(width, height + 25, "Minesweeper!")
 {
+
+	Fl_Box *box = new Fl_Box(230, 0, 26, 25, "17");
+	box->box(FL_UP_BOX);
 	vector<Square*> rowVec;
 	srand(time(NULL)); //Sets random to be even more random!
 	color(FL_BLACK); //board
 
-	unsigned int x;
-	unsigned int y;
 	void* view = static_cast<void*>(this);
 
 
@@ -74,14 +100,14 @@ Board::Board(int width, int height, int Squaresx, int Squaresy, bool debug, vect
 		{
 			if ((rand() % 6) == 1)
 			{
-				mine = new Square((16 * x), (16 * y), 16, 16, " ", imageNames.at(0), "M", " ");
+				mine = new Square((16 * x), (16 * y) + 25, 16, 16, " ", imageNames.at(0), "M", " ", true, this);
 				mine->callback(buttonCallback, view);
 				rowVec.push_back(mine);
 
 			}
 			else
 			{
-				normal = new Square((16 * x), (16 * y), 16, 16, "", imageNames.at(0), "N", " ");
+				normal = new Square((16 * x), (16 * y) + 25, 16, 16, "", imageNames.at(0), "N", " ", true, this);
 				normal->callback(buttonCallback, view);
 				rowVec.push_back(normal);
 			}
@@ -92,48 +118,65 @@ Board::Board(int width, int height, int Squaresx, int Squaresy, bool debug, vect
 
 }
 
-
 void Board::squarePressed(Fl_Widget* widget)
 {
-
 	Square* square = static_cast<Square*>(widget);
 
-	//Blocks action if flagged or questioned
-	if ((square->getRightClick() == "F") || (square->getRightClick() == "?"))
+	if (gameover == false)
 	{
-		return;
-	}
 
-	if (square->getTag() == "M")
-	{
-		int x = this->x();
-		int y = this->y();
-		cout << "YOU LOSE" << endl;
-
-		for (int i = 0; i < gameboard.size(); i++)
+		if ((square->getRightClick() == "F") || (square->getRightClick() == "?"))
 		{
-			for (int k = 0; k < gameboard.at(i).size(); k++)
+			return;
+		}
+
+		if (square->getTag() == "M")
+		{
+			int x = this->x();
+			int y = this->y();
+
+			for (int i = 0; i < gameboard.size(); i++)
 			{
-				if (gameboard.at(i).at(k)->getTag() == "M")
+				for (int k = 0; k < gameboard.at(i).size(); k++)
 				{
-					gameboard.at(i).at(k)->setImage("images/mine.jpg");
+					if (gameboard.at(i).at(k)->getTag() == "M")
+					{
+						gameboard.at(i).at(k)->setImage("images/mine.jpg");
+					}
+					if ((gameboard.at(i).at(k)->getTag() == "N") && (gameboard.at(i).at(k)->getRightClick() == "F"))
+					{
+						gameboard.at(i).at(k)->setImage("images/incorrectMine.jpg");
+					}
 					redraw();
 				}
 			}
-		}
-		square->setImage("images/losingMine.jpg");
-		square->redraw();
-	}
-	else if (square->getTag() == "N")
-	{
-		countMines(gameboard, widget->x(), widget->y());
-		square->redraw();
-	}
 
-	checkWin(gameboard);
+			gameover = true;
+
+			Fl_Window *window = new Fl_Window(260, 100);
+			Fl_Box *box = new Fl_Box(0, -25, 260, 100, "YOU LOSE!");
+			box->box(FL_UP_BOX);
+			box->labelsize(36);
+			box->labelfont(FL_BOLD + FL_ITALIC);
+			box->labeltype(FL_SHADOW_LABEL);
+			Fl_Box *box2 = new Fl_Box(15, 17, 230, 100, "New Game? \n (1) Close this window \n (2) Check out our menu bar!");
+			box2->labelsize(12);
+			window->end();
+			window->show();
+
+			square->setImage("images/losingMine.jpg");
+			square->redraw();
+		}
+		else if (square->getTag() == "N")
+		{
+			countMines(gameboard, (widget->x()) / 16, (widget->y() - 25) / 16);
+
+			square->redraw();
+		}
+	}
 }
 
-int checkSurrounding(vector<vector<Square*>>& board, int x, int y)
+int Board::checkSurrounding(vector<vector<Square*>>& board, int x, int y)
 {
 	int width = board.at(0).size();
 	int height = board.size();
@@ -214,94 +257,58 @@ int checkSurrounding(vector<vector<Square*>>& board, int x, int y)
 	return nearbyMines;
 }
 
-void countMines(vector < vector<Square*> > &board, int x, int  y)
+void Board::countMines(vector < vector<Square*> > &board, int x, int  y)
 {
 	vector <string> numberNames = {"images/emptyUncoveredTile2.jpg", "images/1.jpg", "images/2.jpg", "images/3.jpg",
 		"images/4.jpg", "images/5.jpg", "images/6.jpg", "images/7.jpg", "images/8.jpg"};
 
-	int width = board.at(0).size();
-	int height = board.size();
-	x = (x / 16);
-	y = (y / 16);
+	board.at(x).at(y)->setIsCovered(false);
 	int nearbyMines = checkSurrounding(board, x, y);
 
-	int tempx = x;
-	int tempy = y;
-
-	//if (nearbyMines == 0)
-	//{
-	//	int x1 = x + 1;
-	//	int y1 = y + 1;
-	//	int x2 = x - 1;
-	//	int y2 = y - 1;
-
-		//if (x - 1 >= 0)
-		//{
-		//	board.at(y).at(x)->setImage(numberNames.at(nearbyMines));
-		//	board.at(y).at(x)->redraw();
-		//	countMines(board, (x2)* 16, y * 16);
-		//}
-
-		//if (y - 1 >= 0)
-		//{
-		//	board.at(y).at(x)->setImage(numberNames.at(nearbyMines));
-		//	board.at(y).at(x)->redraw();
-		//	countMines(board, (x)* 16, (y2)* 16);
-		//}
-
-		/*	x1 = tempx + 1;
-			y1 = tempy + 1;
-			x2 = tempx - 1;
-			y2 = tempy - 1;
-
-			if (x + 1 < width)
-				{
-					board.at(y).at(x)->setImage(numberNames.at(nearbyMines));
-					board.at(y).at(x)->redraw();
-					countMines(board, (x1)* 16, y * 16);
-				}
-				if (y + 1 < height)
-				{
-					board.at(y).at(x)->setImage(numberNames.at(nearbyMines));
-					board.at(y).at(x)->redraw();
-					countMines(board, (x)* 16, (y1)* 16);
-				}*/
-
-				/*
-				if ((x - 1 >= 0) && (y - 1 >= 0))
-				{
-					board.at(y).at(x)->setImage(numberNames.at(nearbyMines));
-					board.at(y).at(x)->redraw();
-					countMines(board, (x2)* 16, (y2)* 16);
-				}
-				if ((x + 1 < width) && (y + 1 < height))
-				{
-					board.at(y).at(x)->setImage(numberNames.at(nearbyMines));
-					board.at(y).at(x)->redraw();
-					countMines(board, (x1)* 16, (y1)* 16);
-				}
-				if ((x - 1 >= 0) && (y + 1 < height))
-				{
-					board.at(y).at(x)->setImage(numberNames.at(nearbyMines));
-					board.at(y).at(x)->redraw();
-					countMines(board, (x2)* 16, (y1)* 16);
-				}
-				if ((x + -1 < width) && (y - 1 < height))
-				{
-					board.at(y).at(x)->setImage(numberNames.at(nearbyMines));
-					board.at(y).at(x)->redraw();
-					countMines(board, (x1)* 16, (y2)* 16);
-				}*/
-
-	/*}
-	else
-	{*/
-		board.at(y).at(x)->setImage(numberNames.at(nearbyMines));
-		board.at(y).at(x)->redraw();
-	//}
+	if (nearbyMines == 0)
+	{
+		if (x > 0)
+		{
+			if (gameboard.at(x - 1).at(y)->getIsCovered())
+			{
+				countMines(board, x - 1, y);
+			}
+			if (y > 0 && gameboard.at(x - 1).at(y - 1)->getIsCovered())
+			{
+				countMines(board, x - 1, y - 1);
+			}
+			if (y < (gameboard.size() - 1) && gameboard.at(x - 1).at(y + 1)->getIsCovered())
+			{
+				countMines(board, x - 1, y + 1);
+			}
+		}
+		if (x < (gameboard.size() - 1))
+		{
+			if (gameboard.at(x + 1).at(y)->getIsCovered())
+			{
+				countMines(board, x + 1, y);
+			}
+			if (y > 0 && gameboard.at(x + 1).at(y - 1)->getIsCovered())
+			{
+				countMines(board, x + 1, y - 1);
+			}
+			if (y < (gameboard.size() - 1) && gameboard.at(x + 1).at(y + 1)->getIsCovered())
+			{
+				countMines(board, x + 1, y + 1);
+			}
+		}
+		if (y > 0 && gameboard.at(x).at(y - 1)->getIsCovered())
+		{
+			countMines(board, x, y - 1);
+		}
+		if (y < (gameboard.size() - 1) && gameboard.at(x).at(y + 1)->getIsCovered())
+		{
+			countMines(board, x, y + 1);
+		}
+	}
+	board.at(y).at(x)->setImage(numberNames.at(nearbyMines));
+	board.at(y).at(x)->redraw();
 }
-
-
 
 int Board::handle_key(int e, int key, bool shift)
 {
@@ -352,4 +359,26 @@ int Board::handle(int e)
 	};
 }
 
-
+//int minesNotFlagged(vector<vector<Square*>>& gameboard)
+//{
+//	totalMines(gameboard);
+//}
+//
+//int minesFlagged(vector<vector<Square*>>& gameboard)
+//{
+//	int flaggedMines = 0;
+//	for (int i = 0; i < gameboard.size(); i++)
+//	{
+//		for (int k = 0; k < gameboard.at(i).size(); k++)
+//		{
+//			if (gameboard.at(i).at(k)->getRightClick() == "F")
+//			{
+//				gameboard.at(i).at(k)->setImage("images/incorrectMine.jpg");
+//				flaggedMines++;
+//				//redraw();
+//			}
+//		}
+//	}
+//
+//	return flaggedMines++;
+//}
