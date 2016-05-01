@@ -18,8 +18,13 @@ class Board : public Fl_Window
 	int minesFlagged = 0;
 	Square* normal;
 public:
-
+	Square* FlagDisplay;
 	bool gameover = false;
+	int totalFlagged;
+	int minesNotFlagged(std::vector<std::vector<Square*>>& gameboard);
+
+
+
 	void squarePressed(Fl_Widget * widget);
 	int handle_key(int e, int key, bool shift);
 	int handle(int e);
@@ -28,6 +33,7 @@ public:
 	int checkSurrounding(std::vector<std::vector<Square*>>& board, int x, int y);
 	int totalMines(std::vector<std::vector<Square*>>& gameboard);
 	void checkWin(std::vector<std::vector<Square*>>& gameboard);
+
 
 	Board(int width, int height, int x, int y, bool debug, std::vector<std::string> imageNames);
 	std::vector < std::vector <Square *> > gameboard;

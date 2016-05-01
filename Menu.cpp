@@ -29,7 +29,7 @@ void Menu::MyMenuCallback(Fl_Widget *w, void *)
 	if (str1.compare("&New Game") == 0)
 	{
 		vector <string> imageNames = {"images/coveredTile.jpg", "images/emptyUncoveredTile2.jpg", "images/mine.jpg",
-		"images/flaggedMine.jpg", "images/coveredMineForDebugOnly.jpg", "images/incorrectMine.jpg", "images/losingMine.jpg", "images/question.jpg"};
+			"images/flaggedMine.jpg", "images/coveredMineForDebugOnly.jpg", "images/incorrectMine.jpg", "images/losingMine.jpg", "images/question.jpg"};
 		Board* gameBoard1 = new Board((16 * 16), (16 * 16), 16, 16, false, imageNames);
 		Fl_Menu_Bar *menu = new Fl_Menu_Bar(0, 0, (16 * 16) - 25, 25);
 		menu->add("&File/&New Game", "^n", Menu::MyMenuCallback, 0, FL_MENU_DIVIDER);
@@ -112,7 +112,28 @@ void Menu::MyMenuCallback(Fl_Widget *w, void *)
 	}
 	if (str1.compare("Custom") == 0)
 	{
+		int row;
+		int col;
+		int mines;
+		cout << "Input rows and columbs, and mines" << endl;
+		cin >> row;
+		cin >> col;
+		cin >> mines;
 
+		vector <string> imageNames = {"images/coveredTile.jpg", "images/emptyUncoveredTile2.jpg", "images/mine.jpg",
+			"images/flaggedMine.jpg", "images/coveredMineForDebugOnly.jpg", "images/incorrectMine.jpg", "images/losingMine.jpg", "images/question.jpg"};
+		Board* gameBoard3 = new Board((16 * row), (16 * col), row, col, false, imageNames);
+		Fl_Menu_Bar *menu = new Fl_Menu_Bar(0, 0, (16 * row) - 25, 25);
+		menu->add("&File/&New Game", "^n", Menu::MyMenuCallback, 0, FL_MENU_DIVIDER);
+		menu->add("&File/Fastest &Times", "^t", Menu::MyMenuCallback);
+		menu->add("&File/About", 0, Menu::MyMenuCallback);
+		menu->add("&File/&Quit", "^q", Menu::MyMenuCallback);
+		menu->add("&Difficulty/Easy", 0, Menu::MyMenuCallback);
+		menu->add("&Difficulty/Medium", 0, Menu::MyMenuCallback);
+		menu->add("&Difficulty/Expert", 0, Menu::MyMenuCallback);
+		menu->add("&Difficulty/Custom", 0, Menu::MyMenuCallback);
+		gameBoard3->show(0, nullptr);
+		Fl::run();
 	}
 }
 

@@ -21,17 +21,19 @@ public:
 	Square(unsigned int x, unsigned int y, unsigned int width, unsigned int height, const char *L,
 		std::string imageFilename, std::string tag, std::string rightClick, bool isCovered, Board* b);
 
-
-	void Square::uncoverTile();
 	bool isCovered;
-	
+
 	bool Square::getIsCovered();
 	void Square::setIsCovered(bool trip);
+
+	void setLabel(std::string swag);
 
 	void setRightClick(char* l);
 	std::string getLabel() const;
 	std::string getTag() const;
 	std::string getRightClick() const;
+
+	void setTag(std::string n);
 
 
 	void setImage(std::string x);

@@ -4,6 +4,7 @@
 #include <vector>
 #include <time.h>
 #include <string>
+#include <FL/Fl_Output.H>
 
 using namespace std;
 
@@ -85,14 +86,11 @@ Board::Board(int width, int height, int Squaresx, int Squaresy, bool debug, vect
 	Fl_Window(width, height + 25, "Minesweeper!")
 {
 
-	Fl_Box *box = new Fl_Box(230, 0, 26, 25, "17");
-	box->box(FL_UP_BOX);
 	vector<Square*> rowVec;
 	srand(time(NULL)); //Sets random to be even more random!
 	color(FL_BLACK); //board
 
 	void* view = static_cast<void*>(this);
-
 
 	for (int y = 0; y < Squaresy; y++)
 	{
@@ -116,6 +114,47 @@ Board::Board(int width, int height, int Squaresx, int Squaresy, bool debug, vect
 		rowVec.clear();
 	}
 
+
+	/*for (int y = 0; y < Squaresy; y++)
+	{
+		for (unsigned int x = 0; x < Squaresx; x++)
+		{
+			normal = new Square((16 * x), (16 * y) + 25, 16, 16, "", imageNames.at(0), "N", " ", true, this);
+			normal->callback(buttonCallback, view);
+			rowVec.push_back(normal);
+		}
+		gameboard.push_back(rowVec);
+		rowVec.clear();
+	}
+
+	//FlagDisplay = new Square(230, 0, 27, 25, "mama", "", "s1", " ", true, this);
+
+	int counter = 0;
+	while (counter < mines)
+	{
+		int y = rand() % gameboard.size();
+		int x = rand() % gameboard.at(1).size();
+
+		if (gameboard.at(x).at(y)->getTag() == "N")
+		{
+			gameboard.at(x).at(y)->setTag("M");
+			counter++;
+		}
+	}*/
+
+	/*Fl_Box *mineCount = new Fl_Box(150, 100, 100, 120, "");
+	mineCount->show();
+	mineCount->label("www");
+	mineCount->redraw();*/
+
+
+	//	int flagsRemaining = minesNotFlagged();
+	//Fl_Box *box = new Fl_Box(230, 0, 26, 25, "yo");
+	//box->box(FL_UP_BOX);		
+	//int flagsRemaining = minesNotFlagged(gameboard);
+	//Fl_Box *box = new Fl_Box(230, 0, 26, 25, );
+	//box->box(FL_UP_BOX);
+
 }
 
 void Board::squarePressed(Fl_Widget* widget)
@@ -124,7 +163,6 @@ void Board::squarePressed(Fl_Widget* widget)
 
 	if (gameover == false)
 	{
-
 		if ((square->getRightClick() == "F") || (square->getRightClick() == "?"))
 		{
 			return;
@@ -159,6 +197,7 @@ void Board::squarePressed(Fl_Widget* widget)
 			box->labelsize(36);
 			box->labelfont(FL_BOLD + FL_ITALIC);
 			box->labeltype(FL_SHADOW_LABEL);
+
 			Fl_Box *box2 = new Fl_Box(15, 17, 230, 100, "New Game? \n (1) Close this window \n (2) Check out our menu bar!");
 			box2->labelsize(12);
 			window->end();
@@ -351,7 +390,7 @@ int Board::handle(int e)
 {
 	switch (e)
 	{
-	case FL_KEYBOARD:
+	case FL_KEYUP:
 		this->handle_key(e, Fl::event_key(), Fl::get_key(FL_Shift_L));
 		return 0;
 	default:
@@ -359,26 +398,7 @@ int Board::handle(int e)
 	};
 }
 
-//int minesNotFlagged(vector<vector<Square*>>& gameboard)
-//{
-//	totalMines(gameboard);
-//}
-//
-//int minesFlagged(vector<vector<Square*>>& gameboard)
-//{
-//	int flaggedMines = 0;
-//	for (int i = 0; i < gameboard.size(); i++)
-//	{
-//		for (int k = 0; k < gameboard.at(i).size(); k++)
-//		{
-//			if (gameboard.at(i).at(k)->getRightClick() == "F")
-//			{
-//				gameboard.at(i).at(k)->setImage("images/incorrectMine.jpg");
-//				flaggedMines++;
-//				//redraw();
-//			}
-//		}
-//	}
-//
-//	return flaggedMines++;
-//}
+int Board::minesNotFlagged(vector<vector<Square*>>& gameboard)
+{
+	return totalMines(gameboard) - totalFlagged;
+}

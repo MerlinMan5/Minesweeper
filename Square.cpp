@@ -3,14 +3,19 @@
 #include "Board.h"
 #include <iostream>
 #include <vector>
+#include <FL/Fl_Output.H>
+
 using namespace std;
 bool flagOn = false;
 
 Square::Square(unsigned int x, unsigned int y, unsigned int width, unsigned int height, const char * L, string imageFilename, string tag, string rightClick, bool isCovered, Board* b) :
 	Fl_Button(x, y, width, height, L), label(L), imageLabel(nullptr), tag(tag), rightClick(rightClick), isCovered(isCovered), boardpointer(b)
 {
+	if (tag != "s1")
+	{
 	align(-1);
 	setImage(imageFilename);
+	}
 }
 
 string Square::getLabel() const
@@ -18,10 +23,23 @@ string Square::getLabel() const
 	return label;
 }
 
+void Square::setLabel(string swag)
+{
+	label = swag;
+}
+
+
+void Square::setTag(string n)
+{
+	tag  = n;
+}
+
+
 string Square::getRightClick() const
 {
 	return rightClick;
 }
+
 
 void Square::setRightClick(char* l)
 {
@@ -61,37 +79,41 @@ int Square::handle(int event)
 		switch (Fl::event_button())
 		{
 		case FL_LEFT_MOUSE:
-				//cout << square->getIsCovered() << endl;
-	//square->setIsCovered(false);
-	//cout << square->getIsCovered() << endl;
-		//	uncoverTile();
 			this->do_callback();
 			return 0;
 		case FL_RIGHT_MOUSE:
 			rightClickIterator++;
 
-			if ((rightClickIterator % 3) == 0)
+			if (boardpointer->gameover == false)
 			{
-				rightClickIterator = 0;
-			} 
-			if (rightClickIterator == 1)
-			{
-				this->setImage("images/flaggedMine.jpg");
-				this->setRightClick("F");
-				boardpointer->checkWin(boardpointer->gameboard);
-				redraw();
-			}
-			else if (rightClickIterator == 2)
-			{
-				this->setImage("images/question.jpg");
-				this->setRightClick("?");
-				redraw();
-			}
-			else
-			{
-				this->setImage("images/coveredTile.jpg");
-				this->setRightClick(" ");
-				redraw();
+				if ((rightClickIterator % 3) == 0)
+				{
+					rightClickIterator = 0;
+				}
+				if (rightClickIterator == 1)
+				{
+					boardpointer->totalFlagged++;
+
+					this->setImage("images/flaggedMine.jpg");
+					this->setRightClick("F");
+					cout << boardpointer->minesNotFlagged(boardpointer->gameboard) << endl;
+					//boardpointer->FlagDisplay->setLabel("yo");
+					boardpointer->checkWin(boardpointer->gameboard);
+					redraw();
+				}
+				else if (rightClickIterator == 2)
+				{
+					boardpointer->totalFlagged--;
+					this->setImage("images/question.jpg");
+					this->setRightClick("?");
+					redraw();
+				}
+				else
+				{
+					this->setImage("images/coveredTile.jpg");
+					this->setRightClick(" ");
+					redraw();
+				}
 			}
 
 			return 0;
