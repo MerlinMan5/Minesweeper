@@ -91,6 +91,7 @@ int Square::handle(int event)
 						boardpointer->totalFlagged++;
 						this->setImage("images/flaggedMine.jpg");
 						this->setRightClick("F");
+						//cout << boardpointer->minesNotFlagged(boardpointer->gameboard) << endl;
 						boardpointer->checkWin(boardpointer->gameboard);
 						redraw();
 					}

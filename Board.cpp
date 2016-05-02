@@ -88,10 +88,11 @@ Board::Board(int width, int height, int Squaresx, int Squaresy, bool debug, vect
 {
 	vector<Square*> rowVec;
 	srand(time(NULL)); //Sets random to be even more random!
-	color(FL_BLACK); //board
+	color(FL_BLACK); //board color
 
 	void* view = static_cast<void*>(this);
 
+	//Populates the board
 	for (unsigned int y = 0; y < Squaresy; y++)
 	{
 		for (unsigned int x = 0; x < Squaresx; x++)
@@ -147,11 +148,13 @@ void Board::squarePressed(Fl_Widget* widget)
 
 	if (gameover == false)
 	{
+		//Do nothing if user clicks a flag or question mark
 		if ((square->getRightClick() == "F") || (square->getRightClick() == "?"))
 		{
 			return;
 		}
-
+	
+		//If user clicks mine, end game and change images
 		if (square->getTag() == "M")
 		{
 			int x = this->x();
@@ -203,6 +206,7 @@ void Board::squarePressed(Fl_Widget* widget)
 	}
 }
 
+//Looks at the eight surrounding squares and returns how many mines are near
 int Board::checkSurrounding(vector<vector<Square*>>& board, int x, int y)
 {
 	int width = board.at(0).size();
@@ -284,6 +288,7 @@ int Board::checkSurrounding(vector<vector<Square*>>& board, int x, int y)
 	return nearbyMines;
 }
 
+//updates squares with number of nearby mines
 void Board::countMines(vector < vector<Square*> > &board, int x, int  y)
 {
 	vector <string> numberNames = {"images/0.jpg", "images/1.jpg", "images/2.jpg", "images/3.jpg",
@@ -385,6 +390,7 @@ int Board::handle(int e)
 		return Fl_Window::handle(e);
 	};
 }
+
 
 int Board::minesNotFlagged(vector<vector<Square*>>& gameboard)
 {
