@@ -92,7 +92,7 @@ Board::Board(int width, int height, int Squaresx, int Squaresy, bool debug, vect
 
 	void* view = static_cast<void*>(this);
 
-	for (int y = 0; y < Squaresy; y++)
+	for (unsigned int y = 0; y < Squaresy; y++)
 	{
 		for (unsigned int x = 0; x < Squaresx; x++)
 		{
@@ -180,6 +180,10 @@ void Board::squarePressed(Fl_Widget* widget)
 					if (gameboard.at(i).at(k)->getTag() == "M")
 					{
 						gameboard.at(i).at(k)->setImage("images/mine.jpg");
+					}
+					if (gameboard.at(i).at(k)->getTag() == "N")
+					{
+						gameboard.at(i).at(k)->setImage("images/coveredMineForDebugOnly.jpg");
 					}
 					if ((gameboard.at(i).at(k)->getTag() == "N") && (gameboard.at(i).at(k)->getRightClick() == "F"))
 					{
@@ -298,7 +302,7 @@ int Board::checkSurrounding(vector<vector<Square*>>& board, int x, int y)
 
 void Board::countMines(vector < vector<Square*> > &board, int x, int  y)
 {
-	vector <string> numberNames = {"images/emptyUncoveredTile2.jpg", "images/1.jpg", "images/2.jpg", "images/3.jpg",
+	vector <string> numberNames = {"images/0.jpg", "images/1.jpg", "images/2.jpg", "images/3.jpg",
 		"images/4.jpg", "images/5.jpg", "images/6.jpg", "images/7.jpg", "images/8.jpg"};
 
 	board.at(x).at(y)->setIsCovered(false);
@@ -402,3 +406,4 @@ int Board::minesNotFlagged(vector<vector<Square*>>& gameboard)
 {
 	return totalMines(gameboard) - totalFlagged;
 }
+

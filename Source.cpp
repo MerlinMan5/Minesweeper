@@ -13,9 +13,9 @@
 
 
 using namespace std;
+
 bool debug;
 string tostr(int a);
-//static int count = 0;
 Fl_Box *clock_box;
 
 static void Timer_CB(void *data)
@@ -25,6 +25,13 @@ static void Timer_CB(void *data)
 	string sval = tostr(t);
 	clock_box->copy_label(sval.c_str());
 	Fl::repeat_timeout(1.0, Timer_CB, data);
+	if (t > 5)
+	{
+		//cout << "moo" << endl;
+		//~Fl_Timer();
+		//char suspended()
+
+	}
 }
 
 string tostr(int a)
@@ -39,9 +46,6 @@ int main(int argc, char **argv)
 	vector <string> imageNames = {"images/coveredTile.jpg", "images/emptyUncoveredTile2.jpg", "images/mine.jpg",
 		"images/flaggedMine.jpg", "images/coveredMineForDebugOnly.jpg", "images/incorrectMine.jpg", "images/losingMine.jpg", "images/question.jpg"};
 	Board* gameBoard = new Board((16 * 16), (16 * 16), 16, 16, debug, imageNames);
-
-	//Fl_Output *flags = new Fl_Output(100, 1, 100,100, "yo");
-
 
 	Fl_Menu_Bar *menu = new Fl_Menu_Bar(0, 0, (16 * 16), 25);
 	menu->add("&File/&New Game", "^n", Menu::MyMenuCallback, 0, FL_MENU_DIVIDER);

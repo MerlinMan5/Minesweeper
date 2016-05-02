@@ -86,33 +86,37 @@ int Square::handle(int event)
 
 			if (boardpointer->gameover == false)
 			{
-				if ((rightClickIterator % 3) == 0)
-				{
-					rightClickIterator = 0;
-				}
-				if (rightClickIterator == 1)
-				{
-					boardpointer->totalFlagged++;
+				if(boardpointer->gameboard.at(this->x()/16).at((this->y()/16)-1)->getIsCovered() == true)
 
-					this->setImage("images/flaggedMine.jpg");
-					this->setRightClick("F");
-					cout << boardpointer->minesNotFlagged(boardpointer->gameboard) << endl;
-					//boardpointer->FlagDisplay->setLabel("yo");
-					boardpointer->checkWin(boardpointer->gameboard);
-					redraw();
-				}
-				else if (rightClickIterator == 2)
 				{
-					boardpointer->totalFlagged--;
-					this->setImage("images/question.jpg");
-					this->setRightClick("?");
-					redraw();
-				}
-				else
-				{
-					this->setImage("images/coveredTile.jpg");
-					this->setRightClick(" ");
-					redraw();
+					if ((rightClickIterator % 3) == 0)
+					{
+						rightClickIterator = 0;
+					}
+					if (rightClickIterator == 1)
+					{
+						boardpointer->totalFlagged++;
+
+						this->setImage("images/flaggedMine.jpg");
+						this->setRightClick("F");
+						cout << boardpointer->minesNotFlagged(boardpointer->gameboard) << endl;
+						//boardpointer->FlagDisplay->setLabel("yo");
+						boardpointer->checkWin(boardpointer->gameboard);
+						redraw();
+					}
+					else if (rightClickIterator == 2)
+					{
+						boardpointer->totalFlagged--;
+						this->setImage("images/question.jpg");
+						this->setRightClick("?");
+						redraw();
+					}
+					else
+					{
+						this->setImage("images/coveredTile.jpg");
+						this->setRightClick(" ");
+						redraw();
+					}
 				}
 			}
 
