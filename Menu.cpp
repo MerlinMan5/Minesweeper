@@ -22,7 +22,6 @@
 using namespace std;
 string str1;
 string tostr2(int a);
-//static int count = 0;
 Fl_Box *clock_boxn;
 Fl_Box *clock_boxe;
 Fl_Box *clock_boxm;
@@ -79,6 +78,14 @@ string tostr2(int a)
 	stringstream s;
 	s << a;
 	return s.str();
+}
+
+int toint(string a)
+{
+	int i;
+	stringstream s(a);
+	s >> i;
+	return i;
 }
 
 void Menu::MyMenuCallback(Fl_Widget *w, void *)
@@ -186,15 +193,16 @@ void Menu::MyMenuCallback(Fl_Widget *w, void *)
 		gameBoard3->show(0, nullptr);
 		Fl::add_timeout(1.0, Timer_CBh);
 		Fl::run();
-
 	}
+
 	if (str1.compare("Custom") == 0)
 	{
 		int row;
+		string roww = fl_input("Enter number of rows");
+		row = toint(roww);
 		int col;
-		cout << "Input rows and columns" << endl;
-		cin >> row;
-		cin >> col;
+		string coll = fl_input("Enter number of columns");
+		col= toint(coll);
 
 		vector <string> imageNames = { "images/coveredTile.jpg", "images/emptyUncoveredTile2.jpg", "images/mine.jpg",
 			"images/flaggedMine.jpg", "images/coveredMineForDebugOnly.jpg", "images/incorrectMine.jpg", "images/losingMine.jpg", "images/question.jpg" };
@@ -213,14 +221,4 @@ void Menu::MyMenuCallback(Fl_Widget *w, void *)
 		Fl::add_timeout(1.0, Timer_CBc);
 		Fl::run();
 	}
-}
-
-void Menu::DiffCallback(Fl_Widget *w, void *)
-{
-	Fl_Menu_Bar *bar = (Fl_Menu_Bar*)w;
-	const Fl_Menu_Item *item = bar->mvalue();
-
-	char ipath[256]; bar->item_pathname(ipath, sizeof(ipath));
-
-
 }

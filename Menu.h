@@ -13,5 +13,4 @@ class Menu
 public:
 	static void MyMenuCallback(Fl_Widget *w, void *);
 	static void DiffCallback(Fl_Widget *w, void *);
-	int size = 0;
 };

@@ -8,6 +8,7 @@
 
 using namespace std;
 
+//Counts all mines in the board
 int Board::totalMines(vector<vector<Square*>>& gameboard)
 {
 	int totalMines = 0;
@@ -24,12 +25,12 @@ int Board::totalMines(vector<vector<Square*>>& gameboard)
 	return totalMines;
 }
 
+//Checks if the win condition (all mines flagged) is met
 void Board::checkWin(vector<vector<Square*>>& gameboard)
 {
 	int totalmines = totalMines(gameboard);
 	int minesFlagged = 0;
 
-	//check for win:  All mines flagged
 	for (int i = 0; i < gameboard.size(); i++)
 	{
 		for (int k = 0; k < gameboard.at(i).size(); k++)
@@ -41,6 +42,7 @@ void Board::checkWin(vector<vector<Square*>>& gameboard)
 		}
 	}
 
+	//If the game is over, change images and stop receving user input
 	if (totalmines == minesFlagged)
 	{
 
@@ -60,7 +62,6 @@ void Board::checkWin(vector<vector<Square*>>& gameboard)
 			}
 		}
 
-
 		gameover = true;
 		Fl_Window *window = new Fl_Window(260, 100);
 		Fl_Box *box = new Fl_Box(0, -25, 260, 100, "YOU WIN!");
@@ -68,12 +69,12 @@ void Board::checkWin(vector<vector<Square*>>& gameboard)
 		box->labelsize(36);
 		box->labelfont(FL_BOLD + FL_ITALIC);
 		box->labeltype(FL_SHADOW_LABEL);
+
 		Fl_Box *box2 = new Fl_Box(15, 17, 230, 100, "New Game? \n (1) Close this window \n (2) Check out our menu bar!");
 		box2->labelsize(12);
 		window->end();
 		window->show();
 	}
-
 }
 
 void buttonCallback(Fl_Widget* widget, void* boardPtr)
@@ -85,7 +86,6 @@ void buttonCallback(Fl_Widget* widget, void* boardPtr)
 Board::Board(int width, int height, int Squaresx, int Squaresy, bool debug, vector<string> imageNames) :
 	Fl_Window(width, height + 25, "Minesweeper!")
 {
-
 	vector<Square*> rowVec;
 	srand(time(NULL)); //Sets random to be even more random!
 	color(FL_BLACK); //board
@@ -101,7 +101,6 @@ Board::Board(int width, int height, int Squaresx, int Squaresy, bool debug, vect
 				mine = new Square((16 * x), (16 * y) + 25, 16, 16, " ", imageNames.at(0), "M", " ", true, this);
 				mine->callback(buttonCallback, view);
 				rowVec.push_back(mine);
-
 			}
 			else
 			{
@@ -114,6 +113,7 @@ Board::Board(int width, int height, int Squaresx, int Squaresy, bool debug, vect
 		rowVec.clear();
 	}
 
+	//Alternate method of populating vector with mines
 
 	/*for (int y = 0; y < Squaresy; y++)
 	{
@@ -127,8 +127,6 @@ Board::Board(int width, int height, int Squaresx, int Squaresy, bool debug, vect
 		rowVec.clear();
 	}
 
-	//FlagDisplay = new Square(230, 0, 27, 25, "mama", "", "s1", " ", true, this);
-
 	int counter = 0;
 	while (counter < mines)
 	{
@@ -141,20 +139,6 @@ Board::Board(int width, int height, int Squaresx, int Squaresy, bool debug, vect
 			counter++;
 		}
 	}*/
-
-	/*Fl_Box *mineCount = new Fl_Box(150, 100, 100, 120, "");
-	mineCount->show();
-	mineCount->label("www");
-	mineCount->redraw();*/
-
-
-	//	int flagsRemaining = minesNotFlagged();
-	//Fl_Box *box = new Fl_Box(230, 0, 26, 25, "yo");
-	//box->box(FL_UP_BOX);		
-	//int flagsRemaining = minesNotFlagged(gameboard);
-	//Fl_Box *box = new Fl_Box(230, 0, 26, 25, );
-	//box->box(FL_UP_BOX);
-
 }
 
 void Board::squarePressed(Fl_Widget* widget)

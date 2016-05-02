@@ -17,6 +17,7 @@ class Board : public Fl_Window
 	Square* mine;
 	int minesFlagged = 0;
 	Square* normal;
+
 public:
 
 	Square* FlagDisplay;

@@ -6,16 +6,12 @@
 #include <FL/Fl_Output.H>
 
 using namespace std;
-bool flagOn = false;
 
 Square::Square(unsigned int x, unsigned int y, unsigned int width, unsigned int height, const char * L, string imageFilename, string tag, string rightClick, bool isCovered, Board* b) :
 	Fl_Button(x, y, width, height, L), label(L), imageLabel(nullptr), tag(tag), rightClick(rightClick), isCovered(isCovered), boardpointer(b)
 {
-	if (tag != "s1")
-	{
 	align(-1);
 	setImage(imageFilename);
-	}
 }
 
 string Square::getLabel() const
@@ -28,18 +24,15 @@ void Square::setLabel(string swag)
 	label = swag;
 }
 
-
 void Square::setTag(string n)
 {
-	tag  = n;
+	tag = n;
 }
-
 
 string Square::getRightClick() const
 {
 	return rightClick;
 }
-
 
 void Square::setRightClick(char* l)
 {
@@ -58,10 +51,10 @@ bool Square::getIsCovered()
 
 string Square::getTag() const
 {
-	//boardpointer->countMines(boardpointer->gameboard, 5,5);
 	return tag;
 }
 
+//Takes square and puts an image on it
 void Square::setImage(string filename)
 {
 	delete imageLabel;
@@ -71,6 +64,7 @@ void Square::setImage(string filename)
 	this->resize(this->x(), this->y(), 16, 16);
 }
 
+//Controls respone to left and right clicks
 int Square::handle(int event)
 {
 	switch (event)
@@ -86,8 +80,7 @@ int Square::handle(int event)
 
 			if (boardpointer->gameover == false)
 			{
-				if(boardpointer->gameboard.at(this->x()/16).at((this->y()/16)-1)->getIsCovered() == true)
-
+				if (boardpointer->gameboard.at(this->x() / 16).at((this->y() / 16) - 1)->getIsCovered() == true)
 				{
 					if ((rightClickIterator % 3) == 0)
 					{
@@ -96,11 +89,8 @@ int Square::handle(int event)
 					if (rightClickIterator == 1)
 					{
 						boardpointer->totalFlagged++;
-
 						this->setImage("images/flaggedMine.jpg");
 						this->setRightClick("F");
-						cout << boardpointer->minesNotFlagged(boardpointer->gameboard) << endl;
-						//boardpointer->FlagDisplay->setLabel("yo");
 						boardpointer->checkWin(boardpointer->gameboard);
 						redraw();
 					}
@@ -119,7 +109,6 @@ int Square::handle(int event)
 					}
 				}
 			}
-
 			return 0;
 		}
 	default:
